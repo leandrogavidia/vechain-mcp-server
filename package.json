@@ -1,0 +1,23 @@
+{
+  "name": "vechain-mcp-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.14.0",
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@goat-sdk/adapter-model-context-protocol": "^0.2.11",
+    "@goat-sdk/core": "^0.5.0",
+    "@modelcontextprotocol/sdk": "^1.18.2"
+  }
+}
