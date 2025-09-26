@@ -9,23 +9,26 @@ importers:
   .:
     dependencies:
       '@goat-sdk/adapter-model-context-protocol':
-        specifier: ^0.2.11
+        specifier: 0.2.11
         version: 0.2.11(@goat-sdk/core@0.5.0(zod@3.25.76))(@modelcontextprotocol/sdk@1.18.2)(zod@3.25.76)
       '@goat-sdk/core':
-        specifier: ^0.5.0
+        specifier: 0.5.0
         version: 0.5.0(zod@3.25.76)
       '@modelcontextprotocol/sdk':
-        specifier: ^1.18.2
+        specifier: 1.18.2
         version: 1.18.2
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@types/node':
-        specifier: ^24.5.2
+        specifier: 24.5.2
         version: 24.5.2
       tsx:
-        specifier: ^4.20.5
+        specifier: 4.20.5
         version: 4.20.5
       typescript:
-        specifier: ^5.9.2
+        specifier: 5.9.2
         version: 5.9.2
 
 packages:
