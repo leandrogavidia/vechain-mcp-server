@@ -2,6 +2,11 @@
 
 ## Tools
 
+### Vechain Docs 
+
+- Docs
+    - `searchDocumentation`: Search VeChain Documentation
+
 ### Thorest API
 
 - Accounts

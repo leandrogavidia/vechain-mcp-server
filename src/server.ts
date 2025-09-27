@@ -1,13 +1,14 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { vechainConfig } from "./consts.js";
+import { vechainConfig } from "./config.js";
 import { REVISION } from "./types.js";
+import { createVechainDocsMcpClient } from "./client.js"; 
 
 const server = new McpServer(
   {
-    name: "goat-vechain",
-    version: "1.0.0",
+    name: vechainConfig.mcpServer.name,
+    version: vechainConfig.mcpServer.version,
   },
   {
     capabilities: {
@@ -15,6 +16,57 @@ const server = new McpServer(
     },
   },
 );
+
+// Vechain DOCS
+
+server.registerTool(
+  "searchDocumentation",
+  {
+    title: "Search VeChain Documentation",
+    description:
+      "Search across the documentation to find relevant information, code examples, API references, and guides. Use this tool when you need to answer questions about VeChain Docs, find specific documentation, understand how features work, or locate implementation details. The search returns contextual content with titles and direct links to the documentation pages.",
+    inputSchema: {
+      query: z.string().describe("The search query string"),
+    }
+  },
+  async ({ query }) => {
+    try {
+      const vechainDocsMcpClient = await createVechainDocsMcpClient();
+
+      const response = await vechainDocsMcpClient.client.callTool({ name: "searchDocumentation", arguments: { query } })
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(response, null, 2),
+          },
+        ],
+      };
+
+    } catch (err) {
+      const isAbort = (err as Error)?.name === "AbortError";
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                error: isAbort ? "Request timed out" : "Failed to fetch account",
+                reason: String((err as Error)?.message ?? err),
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      };
+    }
+
+
+  }
+)
 
 // Thorest API
 
@@ -120,8 +172,8 @@ server.registerTool(
           },
         ],
       };
-    } catch (err: any) {
-      const isAbort = err?.name === "AbortError";
+    } catch (err) {
+      const isAbort = (err as Error)?.name === "AbortError";
       return {
         content: [
           {
@@ -129,7 +181,7 @@ server.registerTool(
             text: JSON.stringify(
               {
                 error: isAbort ? "Request timed out" : "Failed to fetch account",
-                reason: String(err?.message ?? err),
+                reason: String((err as Error)?.message ?? err),
                 url,
                 address: normalizedAddress,
                 revision: revision ?? "best",
@@ -212,8 +264,7 @@ server.registerTool(
       if (!res.ok) {
         const bodyText = await res.text().catch(() => "");
         throw new Error(
-          `VeChain node responded ${res.status} ${res.statusText}${
-            bodyText ? `: ${bodyText}` : ""
+          `VeChain node responded ${res.status} ${res.statusText}${bodyText ? `: ${bodyText}` : ""
           }`
         );
       }
@@ -249,8 +300,8 @@ server.registerTool(
           },
         ],
       };
-    } catch (err: any) {
-      const isAbort = err?.name === "AbortError";
+    } catch (err) {
+      const isAbort = (err as Error)?.name === "AbortError";
       return {
         content: [
           {
@@ -258,7 +309,7 @@ server.registerTool(
             text: JSON.stringify(
               {
                 error: isAbort ? "Request timed out" : "Failed to fetch transaction",
-                reason: String(err?.message ?? err),
+                reason: String((err as Error)?.message ?? err),
                 url,
                 id,
                 pending,
@@ -389,8 +440,8 @@ server.registerTool(
           },
         ],
       };
-    } catch (err: any) {
-      const isAbort = err?.name === "AbortError";
+    } catch (err) {
+      const isAbort = (err as Error)?.name === "AbortError";
       return {
         content: [
           {
@@ -398,7 +449,7 @@ server.registerTool(
             text: JSON.stringify(
               {
                 error: isAbort ? "Request timed out" : "Failed to fetch VeChain block",
-                reason: String(err?.message ?? err),
+                reason: String((err as Error)?.message ?? err),
                 url,
               },
               null,
@@ -451,8 +502,8 @@ server.registerTool(
           },
         ],
       };
-    } catch (err: any) {
-      const isAbort = err?.name === "AbortError";
+    } catch (err) {
+      const isAbort = (err as Error)?.name === "AbortError";
       return {
         content: [
           {
@@ -460,7 +511,7 @@ server.registerTool(
             text: JSON.stringify(
               {
                 error: isAbort ? "Request timed out" : "Failed to fetch priority fee",
-                reason: String(err?.message ?? err),
+                reason: String((err as Error)?.message ?? err),
                 url,
               },
               null,
@@ -472,23 +523,6 @@ server.registerTool(
     } finally {
       clearTimeout(timeout);
     }
-  }
-);
-
-server.prompt(
-  "Call this function to say hello when the user wants a greeting.",
-  () => {
-    return {
-      messages: [
-        {
-          role: "assistant",
-          content: {
-            type: "text",
-            text: "Hello from Vechain MCP Server!"
-          }
-        }
-      ]
-    };
   }
 );
 

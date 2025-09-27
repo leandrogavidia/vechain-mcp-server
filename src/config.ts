@@ -3,6 +3,13 @@ const CONTROLLER_ABORT_TIMEOUT_MS = 15_000 // 15 seconds
 const ADDRESS_REGEX = /^(0x)?[0-9a-fA-F]{40}$/;
 const TXID_REGEX = /^0x[0-9a-fA-F]{64}$/;
 
+const MCP_CLIENT_NAME = "vechain-docs-client"
+const MCP_CLIENT_VERSION = "1.0.0"
+const VECHAIN_DOCS_URL = "https://docs.vechain.org"
+
+const MCP_SERVER_NAME = "vechain-mpc-server"
+const MCP_SERVER_VERSION = "1.0.0"
+
 export const vechainConfig = {
     general: {
         addressRegex: ADDRESS_REGEX,
@@ -12,4 +19,13 @@ export const vechainConfig = {
         thorestApiBaseUrl: THOREST_API_BASE_URL,
         controllerAbortTimeout: CONTROLLER_ABORT_TIMEOUT_MS,
     },
+    mcpClient: {
+        name: MCP_CLIENT_NAME,    
+        version: MCP_CLIENT_VERSION,
+        vechainDocsUrl: VECHAIN_DOCS_URL
+    },
+    mcpServer: {
+        name: MCP_SERVER_NAME,
+        version: MCP_SERVER_VERSION
+    }
 }
