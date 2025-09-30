@@ -4,15 +4,14 @@ import { z } from "zod";
 import { vechainConfig } from "./config.js";
 import { REVISION } from "./types.js";
 import { createVechainDocsMcpClient } from "./client.js";
-import { Address, Certificate, Hex, Mnemonic, Secp256k1 } from "@vechain/sdk-core";
+import { Address, Certificate, Hex, Keccak256, Mnemonic, Secp256k1, Transaction, Txt } from "@vechain/sdk-core";
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
-
-console.log(process.env.AGENT_PRIVATE_KEY)
 
 const server = new McpServer(
   {
@@ -535,7 +534,7 @@ server.registerTool(
   }
 );
 
-// Wallet management
+// Wallet and signature management
 
 server.registerTool(
   "createWallet",
@@ -599,7 +598,7 @@ server.registerTool(
 server.registerTool(
   "signCertificate",
   {
-    title: "Sign a certificate",
+    title: "Sign certificate",
     description:
       "Create and sign a canonical certificate. Includes purpose, payload, domain, timestamp, nonce, and expiresAt.",
     inputSchema: {
@@ -625,31 +624,93 @@ server.registerTool(
     const publicKey = Secp256k1.derivePublicKey(formattedSecretKey);
     const publicKeyAddress = Address.ofPublicKey(publicKey).toString();
 
-    try {
-      const certificate = Certificate.of({
-        purpose,
-        payload,
-        timestamp,
-        domain,
-        signer: publicKeyAddress
-      })
+    const certificate = Certificate.of({
+      purpose,
+      payload,
+      timestamp,
+      domain,
+      signer: publicKeyAddress
+    })
 
-      const signature = certificate.sign(formattedSecretKey);
+    const signature = certificate.sign(formattedSecretKey);
 
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify(signature, null, 2)
-        }]
-      };
-    } catch (err) {
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({ error: "Failed to sign certificate", reason: String((err as Error)?.message ?? err) }, null, 2),
-        }],
-      };
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify(signature, null, 2)
+      }]
+    };
+  }
+);
+
+server.registerTool(
+  "signMessage",
+  {
+    title: "Sign message",
+    description:
+      "Sign a message",
+    inputSchema: {
+      message: z.string(),
+    },
+  },
+  async ({ message }) => {
+    const secretKey = process.env.AGENT_PRIVATE_KEY
+
+    if (!secretKey) {
+      throw new Error("Missing AGENT_PRIVATE_KEY variable to use this tool.")
     }
+
+    const formattedSecretKey = new Uint8Array(JSON.parse(secretKey))
+
+    const messageToSign = Txt.of(message);
+    const hash = Keccak256.of(messageToSign.bytes);
+
+    const signature = Secp256k1.sign(hash.bytes, formattedSecretKey);
+    const signatureHex = Hex.of(signature).toString()
+
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify(signatureHex, null, 2)
+      }]
+    };
+
+  }
+);
+
+server.registerTool(
+  "signTransaction",
+  {
+    title: "Sign transaction",
+    description:
+      "Decode and sign a raw transaction.",
+    inputSchema: {
+      rawTransaction: z.string(),
+    },
+  },
+  async ({ rawTransaction }) => {
+    const secretKey = process.env.AGENT_PRIVATE_KEY
+
+    if (!secretKey) {
+      throw new Error("Missing AGENT_PRIVATE_KEY variable to use this tool.")
+    }
+
+    const formattedSecretKey = new Uint8Array(JSON.parse(secretKey))
+
+    const decodedTxBytes = Hex.of(rawTransaction).bytes
+    const decodedTx = Transaction.decode(decodedTxBytes, true);
+
+    const signedTx = decodedTx.sign(formattedSecretKey)
+    const signedTxBytes = signedTx.encoded
+    const signedTxHex = Hex.of(signedTxBytes).toString()
+
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify(signedTxHex, null, 2)
+      }]
+    };
+
   }
 );
 
