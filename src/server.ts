@@ -13,6 +13,9 @@ import dotenv from "dotenv";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
+const currentEnvironment = process.env.ENVIRONMENT || ""
+const isMainnet = currentEnvironment === "MAINNET" 
+
 const server = new McpServer(
   {
     name: vechainConfig.mcpServer.name,
@@ -121,7 +124,8 @@ server.registerTool(
           .optional()
           .describe(
             "Revision: best | justified | finalized | block number | block ID (hex). If omitted, best is used."
-          ),
+          )
+          .default("best"),
     },
   },
   async ({ address, revision }) => {
@@ -129,16 +133,18 @@ server.registerTool(
       ? address.toLowerCase()
       : `0x${address.toLowerCase()}`;
 
-    const base = vechainConfig.mainnet.thorestApiBaseUrl;
+    const base = isMainnet ? vechainConfig.mainnet.thorestApiBaseUrl : vechainConfig.testnet.thorestApiBaseUrl;
     const path = `/accounts/${encodeURIComponent(normalizedAddress)}`;
     const qs = new URLSearchParams();
+
     if (revision !== undefined && revision !== null) {
       qs.set("revision", String(revision));
     }
+    
     const url = `${base}${path}${qs.toString() ? `?${qs.toString()}` : ""}`;
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), vechainConfig.mainnet.controllerAbortTimeout);
+    const timeout = setTimeout(() => controller.abort(), isMainnet ? vechainConfig.mainnet.controllerAbortTimeout : vechainConfig.testnet.controllerAbortTimeout);
 
     try {
       const res = await fetch(url, { signal: controller.signal });
@@ -255,16 +261,18 @@ server.registerTool(
     },
   },
   async ({ id, pending = false, raw = false, head }) => {
-    const base = vechainConfig.mainnet.thorestApiBaseUrl;
+    const base = isMainnet ? vechainConfig.mainnet.thorestApiBaseUrl : vechainConfig.testnet.thorestApiBaseUrl;
     const path = `/transactions/${encodeURIComponent(id)}`;
     const qs = new URLSearchParams();
+
     if (typeof pending === "boolean") qs.set("pending", String(pending));
     if (typeof raw === "boolean") qs.set("raw", String(raw));
     if (head) qs.set("head", head);
+
     const url = `${base}${path}${qs.toString() ? `?${qs.toString()}` : ""}`;
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), vechainConfig.mainnet.controllerAbortTimeout);
+    const timeout = setTimeout(() => controller.abort(), isMainnet ? vechainConfig.mainnet.controllerAbortTimeout : vechainConfig.testnet.controllerAbortTimeout);
 
     try {
       const res = await fetch(url, { signal: controller.signal });
@@ -366,7 +374,8 @@ server.registerTool(
         ])
         .describe(
           "Block revision: hex ID, block number, or keywords: best | justified | finalized"
-        ),
+        )
+        .default("best"),
 
       /**
        * Whether the returned block is expanded.
@@ -396,7 +405,7 @@ server.registerTool(
     },
   },
   async ({ revision, expanded = false, raw = false }) => {
-    const base = vechainConfig.mainnet.thorestApiBaseUrl;
+    const base = isMainnet ? vechainConfig.mainnet.thorestApiBaseUrl : vechainConfig.testnet.thorestApiBaseUrl;
     const path = `/blocks/${encodeURIComponent(String(revision))}`;
     const qs = new URLSearchParams();
 
@@ -405,7 +414,7 @@ server.registerTool(
     const url = `${base}${path}${qs.toString() ? `?${qs.toString()}` : ""}`;
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), vechainConfig.mainnet.controllerAbortTimeout);
+    const timeout = setTimeout(() => controller.abort(), isMainnet ? vechainConfig.mainnet.controllerAbortTimeout : vechainConfig.testnet.controllerAbortTimeout);
 
     try {
       const res = await fetch(url, { signal: controller.signal });
@@ -482,12 +491,12 @@ server.registerTool(
     // No inputs required by the endpoint today (GET /fees/priority)
     inputSchema: {},
   },
-  async () => {
-    const base = vechainConfig.mainnet.thorestApiBaseUrl;
+  async () => {    
+    const base = isMainnet ? vechainConfig.mainnet.thorestApiBaseUrl : vechainConfig.testnet.thorestApiBaseUrl;
     const url = `${base}/fees/priority`;
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), vechainConfig.mainnet.controllerAbortTimeout);
+    const timeout = setTimeout(() => controller.abort(), isMainnet ? vechainConfig.mainnet.controllerAbortTimeout : vechainConfig.testnet.controllerAbortTimeout);
 
     try {
       const res = await fetch(url, { signal: controller.signal });
@@ -717,7 +726,10 @@ server.registerTool(
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Vechain MCP Server running on stdio");
+
+  console.log("Vechain MCP Server running on stdio");
+  
+  console.log(`VeChain MCP Server running in ${isMainnet ? "Mainnet" : "Testnet"} mode`)
 }
 
 main().catch((error) => {

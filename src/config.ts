@@ -1,10 +1,13 @@
-const THOREST_API_BASE_URL = "https://sync-mainnet.vechain.org"
+const MAINNET_THOREST_API_BASE_URL = "https://sync-mainnet.vechain.org"
+const TESTNET_THOREST_API_BASE_URL = "https://testnet.vechain.org"
 const CONTROLLER_ABORT_TIMEOUT_MS = 15_000 // 15 seconds
+
 const ADDRESS_REGEX = /^(0x)?[0-9a-fA-F]{40}$/;
 const TXID_REGEX = /^0x[0-9a-fA-F]{64}$/;
 
 const MCP_CLIENT_NAME = "vechain-docs-client"
 const MCP_CLIENT_VERSION = "1.0.0"
+
 const VECHAIN_DOCS_URL = "https://docs.vechain.org"
 
 const MCP_SERVER_NAME = "vechain-mpc-server"
@@ -16,7 +19,11 @@ export const vechainConfig = {
         txidRegex: TXID_REGEX,
     },
     mainnet: {
-        thorestApiBaseUrl: THOREST_API_BASE_URL,
+        thorestApiBaseUrl: MAINNET_THOREST_API_BASE_URL,
+        controllerAbortTimeout: CONTROLLER_ABORT_TIMEOUT_MS,
+    },
+    testnet: {
+        thorestApiBaseUrl: TESTNET_THOREST_API_BASE_URL,
         controllerAbortTimeout: CONTROLLER_ABORT_TIMEOUT_MS,
     },
     mcpClient: {
