@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VeChain MCP Server</title>
+    <meta name="description"
+        content="This page documents and helps you configure an MCP server exposing VeChain Docs search plus Thorest API tools for accounts, transactions, blocks and fee suggestions." />
+    <link rel="icon" href="favicon.ico" />
+    <style>
+        :root {
+            --bg: #0b0d10;
+            --panel: #0f1318;
+            --muted: #9aa4b2;
+            --text: #e6edf3;
+            --brand: #21d0b2;
+            --brand-2: #7c6cf5;
+            --ring: 0 0 0 3px rgba(33, 208, 178, .35);
+            --radius: 16px;
+            --code-bg: #0a0d12;
+            --border: #1c232d;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f7fafc;
+                --panel: #ffffff;
+                --text: #0b1020;
+                --muted: #5b6777;
+                --border: #e8eef5;
+                --code-bg: #0b1020;
+            }
+
+            .code pre {
+                background: #0b1020;
+                color: #e6edf3;
+            }
+
+            .kbd {
+                background: #0b1020;
+                color: #e6edf3;
+                border-color: #0b1020;
+            }
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font: 16px/1.5 ui-sans-serif, -apple-system, Segoe UI, Roboto, Inter, "SF Pro", system-ui, Arial;
+            color: var(--text);
+            background:
+                radial-gradient(1200px 600px at 10% 0%, rgba(124, 108, 245, .12), transparent 60%),
+                radial-gradient(900px 500px at 90% 20%, rgba(33, 208, 178, .12), transparent 60%),
+                var(--bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            color: var(--brand);
+            text-decoration: none
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        header.nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: saturate(120%) blur(10px);
+            background: color-mix(in oklab, var(--bg), transparent 60%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 16px 24px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: .2px
+        }
+
+        .logo {
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+            box-shadow: var(--shadow)
+        }
+
+        .tabs {
+            margin-left: auto;
+            display: flex;
+            gap: 6px;
+            background: var(--panel);
+            padding: 6px;
+            border-radius: 999px;
+            border: 1px solid var(--border)
+        }
+
+        .tab {
+            border: 0;
+            padding: 8px 14px;
+            border-radius: 999px;
+            color: var(--muted);
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600
+        }
+
+        .tab.active {
+            color: #0b0f14;
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+            box-shadow: var(--shadow)
+        }
+
+        .hero {
+            padding: 40px 24px 16px
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 40px);
+            margin: 4px 0
+        }
+
+        .tagline {
+            color: var(--muted);
+            max-width: 60ch
+        }
+
+        .meta {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            color: var(--muted)
+        }
+
+        .pill {
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: color-mix(in oklab, var(--panel), transparent 20%)
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px
+        }
+
+        .grid.cols-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr))
+        }
+
+        @media (max-width: 960px) {
+            .grid.cols-3 {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid.cols-3 {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .card {
+            background: color-mix(in oklab, var(--panel), transparent 0%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow)
+        }
+
+        .card h3 {
+            margin: .2rem 0 .6rem;
+            font-size: 1.05rem
+        }
+
+        .kpi {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .kpi .icon {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(33, 208, 178, .15), rgba(124, 108, 245, .15));
+            border: 1px solid var(--border)
+        }
+
+        /* Code blocks */
+        .code {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden
+        }
+
+        .code .bar {
+            display: flex;
+            gap: 8px;
+            padding: 10px 12px;
+            align-items: center;
+            background: color-mix(in oklab, var(--panel), transparent 6%);
+            border-bottom: 1px solid var(--border)
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: #ff5f57
+        }
+
+        .dot:nth-child(2) {
+            background: #ffbd2e
+        }
+
+        .dot:nth-child(3) {
+            background: #28c840
+        }
+
+        pre {
+            margin: 0;
+            padding: 16px;
+            overflow: auto;
+            font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+            background: var(--code-bg);
+            color: #cde3ff
+        }
+
+        code {
+            font-family: inherit
+        }
+
+        .copy {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            border: 1px solid var(--border);
+            background: color-mix(in oklab, var(--panel), transparent 10%);
+            color: var(--muted);
+            padding: 6px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600
+        }
+
+        .copy:focus {
+            outline: none;
+            box-shadow: var(--ring)
+        }
+
+        .section {
+            margin: 28px 0
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            margin: 0 0 8px
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        .toc {
+            position: sticky;
+            top: 84px;
+            align-self: start;
+            max-height: calc(100vh - 120px);
+            overflow: auto;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: color-mix(in oklab, var(--panel), transparent 10%)
+        }
+
+        .toc a {
+            display: block;
+            padding: 6px 8px;
+            border-radius: 8px;
+            color: var(--muted)
+        }
+
+        .toc a:hover {
+            background: color-mix(in oklab, var(--panel), transparent 30%);
+            color: var(--text)
+        }
+
+        .kbd {
+            border: 1px solid #1f2937;
+            padding: 2px 6px;
+            border-radius: 6px;
+            background: #0e1621;
+            color: #d1e5ff;
+            font: 12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace
+        }
+
+        .input,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: color-mix(in oklab, var(--panel), transparent 10%);
+            color: var(--text)
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 12px;
+            align-items: center
+        }
+
+        @media (max-width: 720px) {
+            .row {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .btn {
+            appearance: none;
+            border: 0;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+            color: #0b0f14;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .btn.secondary {
+            background: color-mix(in oklab, var(--panel), transparent 10%);
+            color: var(--text);
+            border: 1px solid var(--border)
+        }
+
+        details {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            background: color-mix(in oklab, var(--panel), transparent 10%)
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 700
+        }
+
+        footer {
+            padding: 40px 24px;
+            color: var(--muted)
+        }
+    </style>
+</head>
+
+<body>
+    <header class="nav">
+        <div class="nav-inner container">
+            <div class="brand">
+                <div class="logo" aria-hidden="true"></div>
+                <div>VeChain MCP Server</div>
+            </div>
+            <nav class="tabs" role="tablist" aria-label="Primary">
+                <button class="tab active" data-tab="docs" role="tab" aria-selected="true">Docs</button>
+                <button class="tab" data-tab="setup" role="tab" aria-selected="false">Setup</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <p class="pill" style="display:inline-flex; align-items:center; gap:8px">MCP • Model Context Protocol <span
+                    class="muted">for VeChain</span></p>
+            <h1>Fast tools for VeChain data & docs</h1>
+            <p class="tagline">This page documents and helps you configure an MCP server exposing VeChain Docs search
+                plus Thorest API tools for accounts, transactions, blocks and fee suggestions.</p>
+        </section>
+
+        <div class="grid" style="grid-template-columns: 260px 1fr; gap:24px">
+            <aside class="toc">
+                <strong>On this page</strong>
+                <a href="#quickstart">Quick start</a>
+                <a href="#tools">Tools overview</a>
+                <a href="#server">Server code notes</a>
+                <a href="#playground">Tool playground</a>
+                <a href="#config">Configuration</a>
+                <a href="#run">Run & integrate</a>
+                <a href="#faq">FAQ</a>
+            </aside>
+
+            <div>
+                <!-- DOCS TAB -->
+                <div id="tab-docs" role="tabpanel">
+                    <div class="grid cols-3 section" id="quickstart">
+                        <div class="card">
+                            <div class="kpi">
+                                <div class="icon">🚀</div>
+                                <div>
+                                    <h3>Install</h3>
+                                    <div class="muted">Add the server to your MCP host</div>
+                                </div>
+                            </div>
+                            <div class="code" data-copy>
+                                <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                        class="dot"></span></div>
+                                <pre><code class="language-bash"># with npm
+npm i @modelcontextprotocol/sdk zod
+
+# your server package (example)
+npm i vechain-mcp-server</code></pre>
+                                <button class="copy" title="Copy">Copy</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="kpi">
+                                <div class="icon">🧩</div>
+                                <div>
+                                    <h3>Configure</h3>
+                                    <div class="muted">Set API base and timeouts</div>
+                                </div>
+                            </div>
+                            <div class="code" data-copy>
+                                <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                        class="dot"></span></div>
+                                <pre><code class="language-js">// config.js (example)
+export const vechainConfig = {
+  mcpServer: { name: "vechain-mcp", version: "1.0.0" },
+  mainnet: {
+    thorestApiBaseUrl: "https://mainnet.vechain.org", // Thorest base
+    controllerAbortTimeout: 12_000,
+  },
+  general: {
+    addressRegex: /^(0x)?[0-9a-fA-F]{40}$/,
+    txidRegex: /^0x[0-9a-fA-F]{64}$/,
+  },
+};</code></pre>
+                                <button class="copy" title="Copy">Copy</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="kpi">
+                                <div class="icon">▶️</div>
+                                <div>
+                                    <h3>Run</h3>
+                                    <div class="muted">Start over stdio for your MCP host</div>
+                                </div>
+                            </div>
+                            <div class="code" data-copy>
+                                <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                        class="dot"></span></div>
+                                <pre><code class="language-bash">node server.js
+# or package.json
+# { "scripts": { "mcp:vechain": "node server.js" } }</code></pre>
+                                <button class="copy" title="Copy">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section" id="tools">
+                        <h2>Tools</h2>
+                        <p class="muted">The server exposes one documentation tool and four Thorest API tools.</p>
+
+                        <div class="grid cols-3">
+                            <div class="card">
+                                <h3>Vechain Docs: <code>searchDocumentation</code></h3>
+                                <p>Search across VeChain documentation with contextual results and deep links.</p>
+                                <details>
+                                    <summary>Input</summary>
+                                    <pre><code class="language-ts">{
+  query: string // The search query
+}</code></pre>
+                                </details>
+                            </div>
+                            <div class="card">
+                                <h3>Accounts: <code>getAccount</code></h3>
+                                <p>Retrieve account/contract details by 20‑byte address, with optional
+                                    <code>revision</code>.
+                                </p>
+                                <details>
+                                    <summary>Input</summary>
+                                    <pre><code class="language-ts">{
+  address: string // 20-byte hex, 0x optional
+  revision?: 'best'|'justified'|'finalized'|number|string
+}</code></pre>
+                                </details>
+                            </div>
+                            <div class="card">
+                                <h3>Transactions: <code>getTransaction</code></h3>
+                                <p>Get a transaction by ID; can include pending txs, raw hex, and pin head block.</p>
+                                <details>
+                                    <summary>Input</summary>
+                                    <pre><code class="language-ts">{
+  id: string // 0x + 64 hex
+  pending?: boolean
+  raw?: boolean
+  head?: string
+}</code></pre>
+                                </details>
+                            </div>
+                            <div class="card">
+                                <h3>Blocks: <code>getBlock</code></h3>
+                                <p>Fetch a block by revision (block ID, number, or keywords <code>best</code> /
+                                    <code>justified</code> / <code>finalized</code>).
+                                </p>
+                                <details>
+                                    <summary>Input</summary>
+                                    <pre><code class="language-ts">{
+  revision: 'best'|'justified'|'finalized'|number|string
+  expanded?: boolean
+  raw?: boolean
+}</code></pre>
+                                </details>
+                            </div>
+                            <div class="card">
+                                <h3>Fees: <code>getPriorityFee</code></h3>
+                                <p>Returns a suggested priority fee for near‑term inclusion.</p>
+                                <details>
+                                    <summary>Input</summary>
+                                    <pre><code class="language-ts">{ }</code></pre>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section" id="server">
+                        <h2>Server code notes</h2>
+                        <p class="muted">The server is built with <code>@modelcontextprotocol/sdk</code> over stdio.
+                            Input is validated with <code>zod</code>. Timeouts are enforced with
+                            <code>AbortController</code> and configurable via
+                            <code>vechainConfig.mainnet.controllerAbortTimeout</code>. Errors consistently return JSON
+                            with <code>error</code> and <code>reason</code>.
+                        </p>
+                        <div class="code" data-copy>
+                            <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                            </div>
+                            <pre><code class="language-ts">import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+import { vechainConfig } from "./config.js";
+import { REVISION } from "./types.js";
+import { createVechainDocsMcpClient } from "./client.js"; 
+
+const server = new McpServer(
+  { name: vechainConfig.mcpServer.name, version: vechainConfig.mcpServer.version },
+  { capabilities: { tools: {} } },
+);
+
+// ... register tools: searchDocumentation, getAccount, getTransaction, getBlock, getPriorityFee
+
+async function main(){
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("Vechain MCP Server running on stdio");
+}
+
+main().catch((e)=>{ console.error("Fatal error in main():", e); process.exit(1);});</code></pre>
+                            <button class="copy" title="Copy">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="section" id="playground">
+                        <h2>Tool playground</h2>
+                        <p class="muted">Build a request and copy the generated command or JSON arguments into your MCP
+                            host. This playground does not call the network; it simply formats requests for you.</p>
+
+                        <details open>
+                            <summary>🔎 <strong>searchDocumentation</strong></summary>
+                            <div style="margin:12px 0; display:grid; gap:12px">
+                                <div class="row"><label for="q">Query</label><input id="q" class="input"
+                                        placeholder="e.g. VIP-191 gas mechanics" /></div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap">
+                                    <button class="btn" onclick="build('searchDocumentation')">Build arguments</button>
+                                    <button class="btn secondary" onclick="resetForm(this)">Reset</button>
+                                </div>
+                                <div class="code">
+                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                            class="dot"></span></div>
+                                    <pre><code id="out-searchDocumentation" class="language-json">{
+  "name": "searchDocumentation",
+  "arguments": { "query": "" }
+}</code></pre>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>👤 <strong>getAccount</strong></summary>
+                            <div style="margin:12px 0; display:grid; gap:12px">
+                                <div class="row"><label for="addr">Address</label><input id="addr" class="input"
+                                        placeholder="0x0000000000000000000000000000456E65726779" /></div>
+                                <div class="row"><label for="rev">Revision</label>
+                                    <select id="rev" class="input">
+                                        <option value="">(omit → best)</option>
+                                        <option>best</option>
+                                        <option>justified</option>
+                                        <option>finalized</option>
+                                        <option value=":number">(custom number)</option>
+                                        <option value=":string">(custom string)</option>
+                                    </select>
+                                </div>
+                                <div class="row" id="revCustomRow" style="display:none"><label>Custom
+                                        value</label><input id="revCustom" class="input"
+                                        placeholder="e.g. 123456 or 0xabc..." /></div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap">
+                                    <button class="btn" onclick="build('getAccount')">Build arguments</button>
+                                    <button class="btn secondary" onclick="resetForm(this)">Reset</button>
+                                </div>
+                                <div class="code">
+                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                            class="dot"></span></div>
+                                    <pre><code id="out-getAccount" class="language-json">{
+  "name": "getAccount",
+  "arguments": { "address": "" }
+}</code></pre>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>🔗 <strong>getTransaction</strong></summary>
+                            <div style="margin:12px 0; display:grid; gap:12px">
+                                <div class="row"><label for="txid">Transaction ID</label><input id="txid" class="input"
+                                        placeholder="0x…64 hex" /></div>
+                                <div class="row"><label>Include pending?</label><select id="pending" class="input">
+                                        <option>false</option>
+                                        <option>true</option>
+                                    </select></div>
+                                <div class="row"><label>Include raw?</label><select id="raw" class="input">
+                                        <option>false</option>
+                                        <option>true</option>
+                                    </select></div>
+                                <div class="row"><label>Head block ID</label><input id="head" class="input"
+                                        placeholder="(optional) 0x..." /></div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap">
+                                    <button class="btn" onclick="build('getTransaction')">Build arguments</button>
+                                    <button class="btn secondary" onclick="resetForm(this)">Reset</button>
+                                </div>
+                                <div class="code">
+                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                            class="dot"></span></div>
+                                    <pre><code id="out-getTransaction" class="language-json">{
+  "name": "getTransaction",
+  "arguments": { "id": "" }
+}</code></pre>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>📦 <strong>getBlock</strong></summary>
+                            <div style="margin:12px 0; display:grid; gap:12px">
+                                <div class="row"><label>Revision</label><input id="blockrev" class="input"
+                                        placeholder="best | justified | finalized | block number | block ID" /></div>
+                                <div class="row"><label>Expanded?</label><select id="expanded" class="input">
+                                        <option>false</option>
+                                        <option>true</option>
+                                    </select></div>
+                                <div class="row"><label>Raw (RLP)?</label><select id="rawblock" class="input">
+                                        <option>false</option>
+                                        <option>true</option>
+                                    </select></div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap">
+                                    <button class="btn" onclick="build('getBlock')">Build arguments</button>
+                                    <button class="btn secondary" onclick="resetForm(this)">Reset</button>
+                                </div>
+                                <div class="code">
+                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                            class="dot"></span></div>
+                                    <pre><code id="out-getBlock" class="language-json">{
+  "name": "getBlock",
+  "arguments": { "revision": "best" }
+}</code></pre>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>⛽ <strong>getPriorityFee</strong></summary>
+                            <div style="margin:12px 0; display:grid; gap:12px">
+                                <div style="display:flex; gap:10px; flex-wrap:wrap">
+                                    <button class="btn" onclick="build('getPriorityFee')">Build arguments</button>
+                                </div>
+                                <div class="code">
+                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                            class="dot"></span></div>
+                                    <pre><code id="out-getPriorityFee" class="language-json">{
+  "name": "getPriorityFee",
+  "arguments": { }
+}</code></pre>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+
+                    <div class="section" id="config">
+                        <h2>Configuration</h2>
+                        <div class="grid cols-3">
+                            <div class="card">
+                                <h3>Timeouts</h3>
+                                <p class="muted">Each tool uses an <code>AbortController</code> with a configurable
+                                    timeout:</p>
+                                <pre><code>vechainConfig.mainnet.controllerAbortTimeout // ms</code></pre>
+                            </div>
+                            <div class="card">
+                                <h3>Validation</h3>
+                                <p class="muted">Addresses and tx IDs are validated with regex. All inputs pass through
+                                    <code>zod</code> schemas.
+                                </p>
+                                <pre><code>/^(0x)?[0-9a-fA-F]{40}$/ // address
+/^0x[0-9a-fA-F]{64}$/   // tx id</code></pre>
+                            </div>
+                            <div class="card">
+                                <h3>Mainnet base URL</h3>
+                                <p class="muted">Point to a Thorest‑compatible endpoint:</p>
+                                <pre><code>vechainConfig.mainnet.thorestApiBaseUrl</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section" id="run">
+                        <h2>Run & integrate</h2>
+                        <div class="grid cols-3">
+                            <div class="card">
+                                <h3>Start over stdio</h3>
+                                <div class="code" data-copy>
+                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                            class="dot"></span></div>
+                                    <pre><code class="language-bash">node server.js</code></pre>
+                                    <button class="copy" title="Copy">Copy</button>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3>Example: call a tool</h3>
+                                <p class="muted">From an MCP‑aware host, send <code>callTool</code>:</p>
+                                <div class="code" data-copy>
+                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                            class="dot"></span></div>
+                                    <pre><code class="language-json">{
+  "type": "callTool",
+  "name": "getAccount",
+  "arguments": {
+    "address": "0x0000000000000000000000000000456E65726779",
+    "revision": "best"
+  }
+}</code></pre>
+                                    <button class="copy" title="Copy">Copy</button>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3>Error shape</h3>
+                                <p class="muted">Network & validation errors return informative JSON.</p>
+                                <div class="code" data-copy>
+                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
+                                            class="dot"></span></div>
+                                    <pre><code class="language-json">{
+  "error": "Failed to fetch transaction",
+  "reason": "VeChain node responded 404 Not Found",
+  "url": "…",
+  "id": "0x…",
+  "pending": false,
+  "raw": false,
+  "head": "best"
+}</code></pre>
+                                    <button class="copy" title="Copy">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section" id="faq">
+                        <h2>FAQ</h2>
+                        <details>
+                            <summary>How do I query a specific block state?</summary>
+                            Use the <code>revision</code> parameter across tools that support it. For example, pass a
+                            block number to <code>getAccount</code> or <code>getBlock</code> to pin reads to that state.
+                        </details>
+                        <details>
+                            <summary>Why am I seeing timeouts?</summary>
+                            Increase <code>vechainConfig.mainnet.controllerAbortTimeout</code> and verify your
+                            <code>thorestApiBaseUrl</code> is reachable from the host environment.
+                        </details>
+                        <details>
+                            <summary>Can I return raw encodings?</summary>
+                            Yes—set <code>raw: true</code> on <code>getTransaction</code> or <code>getBlock</code> to
+                            request raw hex / RLP where supported.
+                        </details>
+                    </div>
+                </div>
+
+                <!-- SETUP TAB -->
+                <div id="tab-setup" role="tabpanel" hidden>
+                    <div class="section">
+                        <h2>Integrations</h2>
+                        <ul>
+                            <li>✅ Node.js 18+ installed (<span class="kbd">node -v</span>)</li>
+                            <li>✅ Add dependencies: <span class="kbd">@modelcontextprotocol/sdk</span>, <span
+                                    class="kbd">zod</span></li>
+                            <li>✅ Configure <span class="kbd">vechainConfig</span> with your Thorest base</li>
+                            <li>✅ Ensure outbound network access to VeChain endpoint</li>
+                            <li>✅ Start the server over stdio and register it in your MCP host</li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <h2>Host integration (example)</h2>
+                        <p class="muted">Register the server in your MCP‑aware host configuration (paths vary by host).
+                        </p>
+                        <div class="code" data-copy>
+                            <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                            </div>
+                            <pre><code class="language-json">{
+  "mcpServers": {
+    "vechain": {
+      "command": "node",
+      "args": ["server.js"],
+      "env": { }
+    }
+  }
+}</code></pre>
+                            <button class="copy" title="Copy">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        const panels = { docs: document.getElementById('tab-docs'), setup: document.getElementById('tab-setup') };
+        tabs.forEach(t => t.addEventListener('click', () => {
+            tabs.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+            t.classList.add('active'); t.setAttribute('aria-selected', 'true');
+            const id = t.dataset.tab; Object.values(panels).forEach(p => p.hidden = true); panels[id].hidden = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }));
+
+        document.querySelectorAll('[data-copy] .copy').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const pre = btn.parentElement.querySelector('pre');
+                const text = pre.innerText; try { await navigator.clipboard.writeText(text); btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 1600); } catch { }
+            });
+        });
+
+        const el = id => document.getElementById(id);
+        const out = id => document.getElementById('out-' + id);
+
+        function build(name) {
+            let args = {};
+            switch (name) {
+                case 'searchDocumentation':
+                    args = { query: el('q').value.trim() };
+                    break;
+                case 'getAccount':
+                    const addr = el('addr').value.trim();
+                    const revSel = el('rev').value;
+                    if (revSel === ':number') args.revision = Number(el('revCustom').value);
+                    else if (revSel === ':string') args.revision = el('revCustom').value.trim();
+                    else if (revSel) args.revision = revSel;
+                    args.address = addr;
+                    break;
+                case 'getTransaction':
+                    args = {
+                        id: el('txid').value.trim(),
+                        pending: el('pending').value === 'true',
+                        raw: el('raw').value === 'true'
+                    };
+                    if (el('head').value.trim()) args.head = el('head').value.trim();
+                    break;
+                case 'getBlock':
+                    args = { revision: el('blockrev').value.trim() || 'best', expanded: el('expanded').value === 'true', raw: el('rawblock').value === 'true' };
+                    break;
+                case 'getPriorityFee':
+                    args = {}; break;
+            }
+            out(name).textContent = JSON.stringify({ name, arguments: args }, null, 2);
+        }
+
+        const rev = el('rev'); const row = el('revCustomRow'); const input = el('revCustom');
+        rev.addEventListener('change', () => { row.style.display = (rev.value.startsWith(':')) ? '' : 'none'; if (rev.value.startsWith(':')) input.focus(); });
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => { const id = a.getAttribute('href').slice(1); const target = document.getElementById(id); if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); } });
+        });
+    </script>
+</body>
+
+</html>

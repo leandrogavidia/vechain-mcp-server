@@ -3,7 +3,16 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { vechainConfig } from "./config.js";
 import { REVISION } from "./types.js";
-import { createVechainDocsMcpClient } from "./client.js"; 
+import { createVechainDocsMcpClient } from "./client.js";
+import { Address, Certificate, Hex, Mnemonic, Secp256k1 } from "@vechain/sdk-core";
+
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import dotenv from "dotenv";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+console.log(process.env.AGENT_PRIVATE_KEY)
 
 const server = new McpServer(
   {
@@ -522,6 +531,124 @@ server.registerTool(
       };
     } finally {
       clearTimeout(timeout);
+    }
+  }
+);
+
+// Wallet management
+
+server.registerTool(
+  "createWallet",
+  {
+    title: "Create a VeChain wallet (mnemonic + keys)",
+    description:
+      "Generate a BIP-39 mnemonic (12/15/18/21/24 words) and derive the account-level secp256k1 key at path m/44'/818'/0'/0 (VET coin type = 818). " +
+      "By default, the private key is REDACTED in the response. Set includeSecret=true to include it (handle with care).",
+    inputSchema: {
+      wordlistSize: z
+        .union([z.literal(12), z.literal(15), z.literal(18), z.literal(21), z.literal(24)])
+        .optional()
+        .describe("Length of the BIP-39 mnemonic wordlist. Default: 12")
+    },
+  },
+  async ({ wordlistSize = 12 }) => {
+    try {
+      const mnemonic = Mnemonic.of(wordlistSize);
+      const secretKey = Mnemonic.toPrivateKey(mnemonic);
+      const secretKeyHex = Hex.of(secretKey).toString();
+
+      const publicKey = Secp256k1.derivePublicKey(secretKey);
+      const publicKeyAddress = Address.ofPublicKey(publicKey).toString();
+
+      const result = {
+        mnemonic,
+        secretKey,
+        secretKeyHex,
+        publicKey: publicKeyAddress
+      };
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    } catch (err) {
+      const isAbort = (err as Error)?.name === "AbortError";
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                error: isAbort ? "Request timed out" : "Failed to create wallet",
+                reason: String((err as Error)?.message ?? err),
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      };
+    }
+  }
+);
+
+server.registerTool(
+  "signCertificate",
+  {
+    title: "Sign a certificate",
+    description:
+      "Create and sign a canonical certificate. Includes purpose, payload, domain, timestamp, nonce, and expiresAt.",
+    inputSchema: {
+      purpose: z.enum(["identification", "attestation", "verification"]).default("identification"),
+      payload: z.any().describe("Content to be attested (string or JSON)"),
+      domain: z.string().min(1).describe("Scope or domain where it is valid"),
+      timestamp: z.number().int().positive().optional(),
+    },
+  },
+  async ({
+    purpose,
+    payload,
+    domain,
+    timestamp = Math.floor(Date.now() / 1000),
+  }) => {
+    const secretKey = process.env.AGENT_PRIVATE_KEY
+
+    if (!secretKey) {
+      throw new Error("Missing AGENT_PRIVATE_KEY variable to use this tool.")
+    }
+
+    const formattedSecretKey = new Uint8Array(JSON.parse(secretKey))
+    const publicKey = Secp256k1.derivePublicKey(formattedSecretKey);
+    const publicKeyAddress = Address.ofPublicKey(publicKey).toString();
+
+    try {
+      const certificate = Certificate.of({
+        purpose,
+        payload,
+        timestamp,
+        domain,
+        signer: publicKeyAddress
+      })
+
+      const signature = certificate.sign(formattedSecretKey);
+
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify(signature, null, 2)
+        }]
+      };
+    } catch (err) {
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({ error: "Failed to sign certificate", reason: String((err as Error)?.message ?? err) }, null, 2),
+        }],
+      };
     }
   }
 );
