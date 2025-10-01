@@ -1,0 +1,22 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    properties: {}
+    default: {}
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      // Using environment variables to prevent crash, set dummy env values if not provided
+      command: 'node',
+      args: ['./dist/server.js'],
+      env: {
+        WALLET_PRIVATE_KEY: process.env.AGENT_PRIVATE_KEY || '[]',
+        RPC_PROVIDER_URL: process.env.ENVIRONMENT || 'MAINNET',
+      }
+    })
+  exampleConfig: {}
