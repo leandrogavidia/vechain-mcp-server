@@ -1,0 +1,23 @@
+startCommand:
+  type: streamable-http
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    properties: {}
+    default: {}
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      // Using environment variables to prevent crash, set dummy env values if not provided
+      command: 'node',
+      args: ['./dist/server.js'],
+      env: {
+        AGENT_SECRET_KEY: process.env.AGENT_SECRET_KEY || '0x0000000000000000000000000000000000000000000000000000000000000001',
+        ENVIRONMENT: process.env.ENVIRONMENT || 'MAINNET',
+        USE_STREAMABLE_HTTP: process.env.USE_STREAMABLE_HTTP || 'true',
+        PORT: process.env.PORT || '3000',
+        HOST: process.env.HOST || '127.0.0.1',
+      }
+    })
+  exampleConfig: {}
