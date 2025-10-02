@@ -7,12 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && node -e \"require('fs').chmodSync('dist/server.js', 0o755)\""
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "",
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "5.0.3",
     "@types/node": "24.5.2",
     "tsx": "4.20.5",
     "typescript": "5.9.2"
@@ -23,7 +27,9 @@
     "@modelcontextprotocol/sdk": "1.18.2",
     "@vechain/sdk-core": "2.0.5",
     "@vechain/sdk-network": "2.0.5",
+    "cors": "2.8.5",
     "dotenv": "17.2.3",
+    "express": "5.1.0",
     "zod": "3.25.76"
   }
 }
