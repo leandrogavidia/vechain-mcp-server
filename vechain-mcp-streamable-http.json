@@ -1,0 +1,15 @@
+{
+    "servers": {
+        "vechainMcpStreamableHttp": {
+            "type": "streamable-http",
+            "url": "<YOUR_MCP_URL>/mcp",
+            "env": {
+                "AGENT_SECRET_KEY": "<YOUR_AGENT_SECRET_KEY>",
+                "ENVIRONMENT": "MAINNET",
+                "USE_STREAMABLE_HTTP": "true",
+                "PORT": "3000",
+                "HOST": "127.0.0.1"
+            }
+        }
+    }
+}

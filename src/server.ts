@@ -13,11 +13,27 @@ import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 
+// import { http, createWalletClient } from "viem";
+// import { privateKeyToAccount } from "viem/accounts";
+// import { vechain } from "viem/chains";
+
+// import { getOnChainTools } from "@goat-sdk/adapter-model-context-protocol";
+// import { viem } from "@goat-sdk/wallet-viem";
+// import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const currentEnvironment = process.env.ENVIRONMENT || ""
 const isMainnet = currentEnvironment === "MAINNET"
+
+// const account = privateKeyToAccount(process.env.AGENT_SECRET_KEY as `0x${string}`);
+
+// const walletClient = createWalletClient({
+//     account: account,
+//     transport: http(process.env.RPC_PROVIDER_URL),
+//     chain: vechain,
+// });
 
 function createVechainServer() {
   const server = new McpServer(

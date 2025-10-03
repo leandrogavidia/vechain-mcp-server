@@ -1,0 +1,16 @@
+{
+    "servers": {
+        "vechainMcpStdio": {
+            "command": "node",
+            "type": "stdio",
+            "args": [
+                "/ABSOLUTE/PATH/TO/PARENT/vechain-mcp-server/dist/server.js"
+            ],
+            "env": {
+                "AGENT_SECRET_KEY": "<YOUR_AGENT_SECRET_KEY>",
+                "ENVIRONMENT": "MAINNET",
+                "USE_STREAMABLE_HTTP": "false"
+            }
+        }
+    }
+}
