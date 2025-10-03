@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && node -e \"require('fs').chmodSync('dist/server.js', 0o755)\""
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/server.js', 0o755)\"",
+    "start": "node ./dist/server.js"
   },
   "files": [
     "dist"

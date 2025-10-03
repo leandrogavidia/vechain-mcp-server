@@ -13,6 +13,9 @@ const VECHAIN_DOCS_URL = "https://docs.vechain.org"
 const MCP_SERVER_NAME = "vechain-mpc-server"
 const MCP_SERVER_VERSION = "1.0.0"
 
+const MAINNET_RPC_URL = "https://mainnet.rpc.vechain.org"
+const TESTNET_RPC_URL = "http://testnet.rpc.vechain.org"
+
 export const vechainConfig = {
     general: {
         addressRegex: ADDRESS_REGEX,
@@ -21,10 +24,12 @@ export const vechainConfig = {
     mainnet: {
         thorestApiBaseUrl: MAINNET_THOREST_API_BASE_URL,
         controllerAbortTimeout: CONTROLLER_ABORT_TIMEOUT_MS,
+        rpc: MAINNET_RPC_URL
     },
     testnet: {
         thorestApiBaseUrl: TESTNET_THOREST_API_BASE_URL,
         controllerAbortTimeout: CONTROLLER_ABORT_TIMEOUT_MS,
+        rpc: TESTNET_RPC_URL
     },
     mcpClient: {
         name: MCP_CLIENT_NAME,    
