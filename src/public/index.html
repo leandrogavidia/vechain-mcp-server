@@ -297,7 +297,7 @@
 
         .toc {
             position: sticky;
-            top: 84px;
+            top: 112px;
             align-self: start;
             max-height: calc(100vh - 120px);
             overflow: auto;
@@ -396,7 +396,6 @@
             </div>
             <nav class="tabs" role="tablist" aria-label="Primary">
                 <button class="tab active" data-tab="docs" role="tab" aria-selected="true">Docs</button>
-                <button class="tab" data-tab="setup" role="tab" aria-selected="false">Setup</button>
             </nav>
         </div>
     </header>
@@ -413,181 +412,29 @@
         <div class="grid" style="grid-template-columns: 260px 1fr; gap:24px">
             <aside class="toc">
                 <strong>On this page</strong>
-                <a href="#quickstart">Quick start</a>
-                <a href="#tools">Tools overview</a>
-                <a href="#server">Server code notes</a>
+                <a href="#integration">Integration</a>
                 <a href="#playground">Tool playground</a>
-                <a href="#config">Configuration</a>
-                <a href="#run">Run & integrate</a>
                 <a href="#faq">FAQ</a>
             </aside>
 
             <div>
-                <!-- DOCS TAB -->
                 <div id="tab-docs" role="tabpanel">
-                    <div class="grid cols-3 section" id="quickstart">
-                        <div class="card">
-                            <div class="kpi">
-                                <div class="icon">🚀</div>
-                                <div>
-                                    <h3>Install</h3>
-                                    <div class="muted">Add the server to your MCP host</div>
-                                </div>
-                            </div>
-                            <div class="code" data-copy>
-                                <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                        class="dot"></span></div>
-                                <pre><code class="language-bash"># with npm
-npm i @modelcontextprotocol/sdk zod
-
-# your server package (example)
-npm i vechain-mcp-server</code></pre>
-                                <button class="copy" title="Copy">Copy</button>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="kpi">
-                                <div class="icon">🧩</div>
-                                <div>
-                                    <h3>Configure</h3>
-                                    <div class="muted">Set API base and timeouts</div>
-                                </div>
-                            </div>
-                            <div class="code" data-copy>
-                                <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                        class="dot"></span></div>
-                                <pre><code class="language-js">// config.js (example)
-export const vechainConfig = {
-  mcpServer: { name: "vechain-mcp", version: "1.0.0" },
-  mainnet: {
-    thorestApiBaseUrl: "https://mainnet.vechain.org", // Thorest base
-    controllerAbortTimeout: 12_000,
-  },
-  general: {
-    addressRegex: /^(0x)?[0-9a-fA-F]{40}$/,
-    txidRegex: /^0x[0-9a-fA-F]{64}$/,
-  },
-};</code></pre>
-                                <button class="copy" title="Copy">Copy</button>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="kpi">
-                                <div class="icon">▶️</div>
-                                <div>
-                                    <h3>Run</h3>
-                                    <div class="muted">Start over stdio for your MCP host</div>
-                                </div>
-                            </div>
-                            <div class="code" data-copy>
-                                <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                        class="dot"></span></div>
-                                <pre><code class="language-bash">node server.js
-# or package.json
-# { "scripts": { "mcp:vechain": "node server.js" } }</code></pre>
-                                <button class="copy" title="Copy">Copy</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section" id="tools">
-                        <h2>Tools</h2>
-                        <p class="muted">The server exposes one documentation tool and four Thorest API tools.</p>
-
-                        <div class="grid cols-3">
-                            <div class="card">
-                                <h3>Vechain Docs: <code>searchDocumentation</code></h3>
-                                <p>Search across VeChain documentation with contextual results and deep links.</p>
-                                <details>
-                                    <summary>Input</summary>
-                                    <pre><code class="language-ts">{
-  query: string // The search query
-}</code></pre>
-                                </details>
-                            </div>
-                            <div class="card">
-                                <h3>Accounts: <code>getAccount</code></h3>
-                                <p>Retrieve account/contract details by 20‑byte address, with optional
-                                    <code>revision</code>.
-                                </p>
-                                <details>
-                                    <summary>Input</summary>
-                                    <pre><code class="language-ts">{
-  address: string // 20-byte hex, 0x optional
-  revision?: 'best'|'justified'|'finalized'|number|string
-}</code></pre>
-                                </details>
-                            </div>
-                            <div class="card">
-                                <h3>Transactions: <code>getTransaction</code></h3>
-                                <p>Get a transaction by ID; can include pending txs, raw hex, and pin head block.</p>
-                                <details>
-                                    <summary>Input</summary>
-                                    <pre><code class="language-ts">{
-  id: string // 0x + 64 hex
-  pending?: boolean
-  raw?: boolean
-  head?: string
-}</code></pre>
-                                </details>
-                            </div>
-                            <div class="card">
-                                <h3>Blocks: <code>getBlock</code></h3>
-                                <p>Fetch a block by revision (block ID, number, or keywords <code>best</code> /
-                                    <code>justified</code> / <code>finalized</code>).
-                                </p>
-                                <details>
-                                    <summary>Input</summary>
-                                    <pre><code class="language-ts">{
-  revision: 'best'|'justified'|'finalized'|number|string
-  expanded?: boolean
-  raw?: boolean
-}</code></pre>
-                                </details>
-                            </div>
-                            <div class="card">
-                                <h3>Fees: <code>getPriorityFee</code></h3>
-                                <p>Returns a suggested priority fee for near‑term inclusion.</p>
-                                <details>
-                                    <summary>Input</summary>
-                                    <pre><code class="language-ts">{ }</code></pre>
-                                </details>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section" id="server">
-                        <h2>Server code notes</h2>
-                        <p class="muted">The server is built with <code>@modelcontextprotocol/sdk</code> over stdio.
-                            Input is validated with <code>zod</code>. Timeouts are enforced with
-                            <code>AbortController</code> and configurable via
-                            <code>vechainConfig.mainnet.controllerAbortTimeout</code>. Errors consistently return JSON
-                            with <code>error</code> and <code>reason</code>.
+                    <div id="integration" class="section">
+                        <h2>Integrations</h2>
+                        <p class="muted">Register the server in your MCP‑aware host configuration (paths vary by host).
                         </p>
                         <div class="code" data-copy>
                             <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
                             </div>
-                            <pre><code class="language-ts">import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
-import { vechainConfig } from "./config.js";
-import { REVISION } from "./types.js";
-import { createVechainDocsMcpClient } from "./client.js"; 
-
-const server = new McpServer(
-  { name: vechainConfig.mcpServer.name, version: vechainConfig.mcpServer.version },
-  { capabilities: { tools: {} } },
-);
-
-// ... register tools: searchDocumentation, getAccount, getTransaction, getBlock, getPriorityFee
-
-async function main(){
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error("Vechain MCP Server running on stdio");
-}
-
-main().catch((e)=>{ console.error("Fatal error in main():", e); process.exit(1);});</code></pre>
+                            <pre><code class="language-json">{
+  "mcpServers": {
+    "vechain": {
+      "command": "node",
+      "args": ["server.js"],
+      "env": { }
+    }
+  }
+}</code></pre>
                             <button class="copy" title="Copy">Copy</button>
                         </div>
                     </div>
@@ -726,80 +573,6 @@ main().catch((e)=>{ console.error("Fatal error in main():", e); process.exit(1);
                         </details>
                     </div>
 
-                    <div class="section" id="config">
-                        <h2>Configuration</h2>
-                        <div class="grid cols-3">
-                            <div class="card">
-                                <h3>Timeouts</h3>
-                                <p class="muted">Each tool uses an <code>AbortController</code> with a configurable
-                                    timeout:</p>
-                                <pre><code>vechainConfig.mainnet.controllerAbortTimeout // ms</code></pre>
-                            </div>
-                            <div class="card">
-                                <h3>Validation</h3>
-                                <p class="muted">Addresses and tx IDs are validated with regex. All inputs pass through
-                                    <code>zod</code> schemas.
-                                </p>
-                                <pre><code>/^(0x)?[0-9a-fA-F]{40}$/ // address
-/^0x[0-9a-fA-F]{64}$/   // tx id</code></pre>
-                            </div>
-                            <div class="card">
-                                <h3>Mainnet base URL</h3>
-                                <p class="muted">Point to a Thorest‑compatible endpoint:</p>
-                                <pre><code>vechainConfig.mainnet.thorestApiBaseUrl</code></pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section" id="run">
-                        <h2>Run & integrate</h2>
-                        <div class="grid cols-3">
-                            <div class="card">
-                                <h3>Start over stdio</h3>
-                                <div class="code" data-copy>
-                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                            class="dot"></span></div>
-                                    <pre><code class="language-bash">node server.js</code></pre>
-                                    <button class="copy" title="Copy">Copy</button>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <h3>Example: call a tool</h3>
-                                <p class="muted">From an MCP‑aware host, send <code>callTool</code>:</p>
-                                <div class="code" data-copy>
-                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                            class="dot"></span></div>
-                                    <pre><code class="language-json">{
-  "type": "callTool",
-  "name": "getAccount",
-  "arguments": {
-    "address": "0x0000000000000000000000000000456E65726779",
-    "revision": "best"
-  }
-}</code></pre>
-                                    <button class="copy" title="Copy">Copy</button>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <h3>Error shape</h3>
-                                <p class="muted">Network & validation errors return informative JSON.</p>
-                                <div class="code" data-copy>
-                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                            class="dot"></span></div>
-                                    <pre><code class="language-json">{
-  "error": "Failed to fetch transaction",
-  "reason": "VeChain node responded 404 Not Found",
-  "url": "…",
-  "id": "0x…",
-  "pending": false,
-  "raw": false,
-  "head": "best"
-}</code></pre>
-                                    <button class="copy" title="Copy">Copy</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="section" id="faq">
                         <h2>FAQ</h2>
@@ -820,56 +593,11 @@ main().catch((e)=>{ console.error("Fatal error in main():", e); process.exit(1);
                         </details>
                     </div>
                 </div>
-
-                <!-- SETUP TAB -->
-                <div id="tab-setup" role="tabpanel" hidden>
-                    <div class="section">
-                        <h2>Integrations</h2>
-                        <ul>
-                            <li>✅ Node.js 18+ installed (<span class="kbd">node -v</span>)</li>
-                            <li>✅ Add dependencies: <span class="kbd">@modelcontextprotocol/sdk</span>, <span
-                                    class="kbd">zod</span></li>
-                            <li>✅ Configure <span class="kbd">vechainConfig</span> with your Thorest base</li>
-                            <li>✅ Ensure outbound network access to VeChain endpoint</li>
-                            <li>✅ Start the server over stdio and register it in your MCP host</li>
-                        </ul>
-                    </div>
-
-                    <div class="section">
-                        <h2>Host integration (example)</h2>
-                        <p class="muted">Register the server in your MCP‑aware host configuration (paths vary by host).
-                        </p>
-                        <div class="code" data-copy>
-                            <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                            </div>
-                            <pre><code class="language-json">{
-  "mcpServers": {
-    "vechain": {
-      "command": "node",
-      "args": ["server.js"],
-      "env": { }
-    }
-  }
-}</code></pre>
-                            <button class="copy" title="Copy">Copy</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
 
     <script>
-        // Tab switching
-        const tabs = document.querySelectorAll('.tab');
-        const panels = { docs: document.getElementById('tab-docs'), setup: document.getElementById('tab-setup') };
-        tabs.forEach(t => t.addEventListener('click', () => {
-            tabs.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
-            t.classList.add('active'); t.setAttribute('aria-selected', 'true');
-            const id = t.dataset.tab; Object.values(panels).forEach(p => p.hidden = true); panels[id].hidden = false;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }));
-
         document.querySelectorAll('[data-copy] .copy').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const pre = btn.parentElement.querySelector('pre');

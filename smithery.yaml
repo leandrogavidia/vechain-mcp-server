@@ -4,3 +4,12 @@ build:
   dockerBuildPath: "."               # Docker build context
 startCommand:
   type: "http"
+  configSchema:                      # Optional: JSON Schema for configuration
+    type: "object"
+    properties:
+      apiKey:
+        type: "string"
+        description: "API key for external service"
+    required: ["apiKey"]
+  exampleConfig:                     # Optional: Example configuration
+    apiKey: "your-api-key-here"
