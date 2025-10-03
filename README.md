@@ -57,11 +57,11 @@
 
 ## Run the project locally
 
-In one terminal window, run the following command: `pnpx @modelcontextprotocol/inspector pnpx tsx ./src/server.ts` in `stdio` mode.
+In one terminal window, run the following command: `pnpx @modelcontextprotocol/inspector pnpx tsx ./src/index.ts` in `stdio` mode.
 
 ## Build and run
 
-Run the command: `pnpm run build` and then: `node ./dist/server.js`
+Run the command: `pnpm run build` and then: `node ./dist/index.js`
 
 ## Deployment
 
