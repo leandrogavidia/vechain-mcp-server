@@ -10,7 +10,20 @@
 
 </div>
 
----
+## Integration
+
+Register the server in your MCP-aware host configuration.
+
+```json
+{
+  "mcpServers": {
+    "vechainMcp": {
+      "url": "https://server.smithery.ai/@leandrogavidia/vechain-mcp-server/mcp",
+      "type": "streamable-http"
+    }
+  }
+}
+```
 
 ## Tools
 
