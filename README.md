@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./src/public/images/isotipo-bg.png" alt="VeChain logo" width="140">
+<img src="./docs/images/isotipo-bg.png" alt="VeChain logo" width="140">
 
 <p></p>
 
