@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./src/public/images/isotipo.png" alt="VeChain logo" width="140">
+<img src="./src/public/images/isotipo-bg.png" alt="VeChain logo" width="140">
 
 <p></p>
 
@@ -16,30 +16,66 @@
 
 - ### Vechain Docs 
 
-    - Docs
-        - `searchDocumentation`: Search VeChain Documentation.
+    - **Docs**
+        
+        - `search_documentation`: Search VeChain Documentation.
 
 - ### Thorest API
 
     - **Accounts**
-        - `getAccount`: Retrieve account details.
+        
+        - `get_account`: Retrieve account details.
 
     - **Transactions**
-        - `getTransaction`: Retrieve a transaction by ID.
+        
+        - `get_transaction`: Retrieve a transaction by ID.
         
     - **Blocks**
-        - `getBlock`: Get a VeChain block.
+        
+        - `get_block`: Get a VeChain block.
+    
     - **Fees**
-        - `getPriorityFee`: Suggest a priority fee.
+        
+        - `get_priority_fee`: Suggest a priority fee.
 
 - ### Wallet & signatures
 
     - **Wallet**
-        - `createWallet`: Create a VeChain wallet (mnemonic + keys).
+       
+        - `create_wallet`: Create a VeChain wallet (mnemonic + keys).
+    
     - **Signatures**
-        - `signCertificate`: Create and sign a canonical certificate.
-        - `signMessage`: Sign a message.
-        - `signTransaction`: Decode and sign a raw transaction.
+       
+        - `sign_certificate`: Create and sign a canonical certificate.
+       
+        - `sign_raw_transaction`: Sign raw transaction.
+
+- ### Goat SDK (VeChain Tools)
+
+    - `get_address`: Get the address of the wallet
+    
+    - `get_chain`: Get the chain of the wallet
+    
+    - `sign_message`: Sign a message with the wallet
+    
+    - `get_balance`: Get the balance of the wallet for native currency or a specific ERC20 token.
+    
+    - `get_token_info_by_ticker`: Get information about a configured token (like contract address and decimals) by its ticker symbol.
+    
+    - `convert_to_base_units`: Convert a token amount from human-readable units to its smallest unit (e.g., wei).
+    
+    - `convert_from_base_units`: Convert a token amount from its smallest unit (e.g., wei) to human-readable units.
+    
+    - `sign_typed_data_evm`: Sign an EIP-712 typed data structure (EVM)
+    
+    - `get_token_allowance_evm`: Get the allowance of an ERC20 token for a spender (returns amount in base units)
+    
+    - `send_token`: Send native currency or an ERC20 token to a recipient, in base units.
+    
+    - `approve_token_evm`: Approve an amount (specified in base units) of an ERC20 token for a spender
+
+    - `revoke_token_approval_evm`: Revoke approval for an ERC20 token from a spender (sets allowance to 0)
+
 
 ---
 
@@ -61,7 +97,7 @@ In one terminal window, run the following command: `pnpx @modelcontextprotocol/i
 
 ## Build and run
 
-Run the command: `pnpm run build` and then: `node ./dist/index.js`
+Run the command: `pnpm run build` and then: `pnpm run start`
 
 ## Deployment
 

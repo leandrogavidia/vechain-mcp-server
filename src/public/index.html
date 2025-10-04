@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>VeChain MCP Server</title>
     <meta name="description"
@@ -17,7 +17,7 @@
             --brand: #21d0b2;
             --brand-2: #7c6cf5;
             --ring: 0 0 0 3px rgba(33, 208, 178, .35);
-            --radius: 16px;
+            --radius: 12px;
             --code-bg: #0a0d12;
             --border: #1c232d;
             --shadow: 0 10px 30px rgba(0, 0, 0, .35);
@@ -37,48 +37,40 @@
                 background: #0b1020;
                 color: #e6edf3;
             }
-
-            .kbd {
-                background: #0b1020;
-                color: #e6edf3;
-                border-color: #0b1020;
-            }
         }
 
         * {
-            box-sizing: border-box
+            box-sizing: border-box;
         }
 
         html,
         body {
-            height: 100%
+            height: 100%;
         }
 
         body {
             margin: 0;
-            font: 16px/1.5 ui-sans-serif, -apple-system, Segoe UI, Roboto, Inter, "SF Pro", system-ui, Arial;
+            font: 16px/1.5 ui-sans-serif, -apple-system, "Segoe UI", Roboto, Inter, system-ui, Arial;
             color: var(--text);
-            background:
-                radial-gradient(1200px 600px at 10% 0%, rgba(124, 108, 245, .12), transparent 60%),
-                radial-gradient(900px 500px at 90% 20%, rgba(33, 208, 178, .12), transparent 60%),
-                var(--bg);
+            background: var(--bg);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
         a {
             color: var(--brand);
-            text-decoration: none
+            text-decoration: none;
+            text-decoration: underline;
         }
 
         a:hover {
-            text-decoration: underline
+            text-decoration: underline;
         }
 
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 24px
+            padding: 24px;
         }
 
         header.nav {
@@ -94,7 +86,7 @@
             display: flex;
             align-items: center;
             gap: 18px;
-            padding: 16px 24px
+            padding: 16px 24px;
         }
 
         .brand {
@@ -102,17 +94,15 @@
             align-items: center;
             gap: 12px;
             font-weight: 700;
-            letter-spacing: .2px
+            letter-spacing: .2px;
         }
 
         .logo {
-            width: 28px;
-            height: 28px;
+            width: 60px;
+            height: 60px;
             display: grid;
             place-items: center;
             border-radius: 8px;
-            background: linear-gradient(135deg, var(--brand), var(--brand-2));
-            box-shadow: var(--shadow)
         }
 
         .tabs {
@@ -122,7 +112,7 @@
             background: var(--panel);
             padding: 6px;
             border-radius: 999px;
-            border: 1px solid var(--border)
+            border: 1px solid var(--border);
         }
 
         .tab {
@@ -132,99 +122,53 @@
             color: var(--muted);
             background: transparent;
             cursor: pointer;
-            font-weight: 600
+            font-weight: 600;
         }
 
         .tab.active {
             color: #0b0f14;
             background: linear-gradient(135deg, var(--brand), var(--brand-2));
-            box-shadow: var(--shadow)
+            box-shadow: var(--shadow);
         }
 
         .hero {
-            padding: 40px 24px 16px
+            padding: 40px 0 16px;
         }
 
         .hero h1 {
             font-size: clamp(28px, 4vw, 40px);
-            margin: 4px 0
+            margin: 4px 0;
         }
 
         .tagline {
             color: var(--muted);
-            max-width: 60ch
-        }
-
-        .meta {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            color: var(--muted)
+            max-width: 60ch;
         }
 
         .pill {
             border: 1px solid var(--border);
             padding: 6px 10px;
             border-radius: 999px;
-            background: color-mix(in oklab, var(--panel), transparent 20%)
-        }
-
-        .grid {
-            display: grid;
-            gap: 16px
-        }
-
-        .grid.cols-3 {
-            grid-template-columns: repeat(3, minmax(0, 1fr))
-        }
-
-        @media (max-width: 960px) {
-            .grid.cols-3 {
-                grid-template-columns: 1fr 1fr
-            }
-        }
-
-        @media (max-width: 640px) {
-            .grid.cols-3 {
-                grid-template-columns: 1fr
-            }
-        }
-
-        .card {
-            background: color-mix(in oklab, var(--panel), transparent 0%);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px;
-            box-shadow: var(--shadow)
-        }
-
-        .card h3 {
-            margin: .2rem 0 .6rem;
-            font-size: 1.05rem
-        }
-
-        .kpi {
-            display: flex;
+            background: color-mix(in oklab, var(--panel), transparent 20%);
+            display: inline-flex;
             align-items: center;
-            gap: 12px
+            gap: 8px;
         }
 
-        .kpi .icon {
-            width: 36px;
-            height: 36px;
-            display: grid;
-            place-items: center;
-            border-radius: 10px;
-            background: linear-gradient(135deg, rgba(33, 208, 178, .15), rgba(124, 108, 245, .15));
-            border: 1px solid var(--border)
+        .section {
+            margin: 28px 0;
         }
 
-        /* Code blocks */
+        .muted {
+            color: var(--muted);
+        }
+
         .code {
             position: relative;
             border: 1px solid var(--border);
             border-radius: 12px;
-            overflow: hidden
+            overflow: hidden;
+            background: color-mix(in oklab, var(--panel), transparent 0%);
         }
 
         .code .bar {
@@ -233,22 +177,22 @@
             padding: 10px 12px;
             align-items: center;
             background: color-mix(in oklab, var(--panel), transparent 6%);
-            border-bottom: 1px solid var(--border)
+            border-bottom: 1px solid var(--border);
         }
 
         .dot {
             width: 10px;
             height: 10px;
             border-radius: 999px;
-            background: #ff5f57
+            background: #ff5f57;
         }
 
         .dot:nth-child(2) {
-            background: #ffbd2e
+            background: #ffbd2e;
         }
 
         .dot:nth-child(3) {
-            background: #28c840
+            background: #28c840;
         }
 
         pre {
@@ -257,11 +201,11 @@
             overflow: auto;
             font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
             background: var(--code-bg);
-            color: #cde3ff
+            color: #cde3ff;
         }
 
         code {
-            font-family: inherit
+            font-family: inherit;
         }
 
         .copy {
@@ -274,49 +218,12 @@
             padding: 6px 10px;
             border-radius: 10px;
             cursor: pointer;
-            font-weight: 600
+            font-weight: 600;
         }
 
         .copy:focus {
             outline: none;
-            box-shadow: var(--ring)
-        }
-
-        .section {
-            margin: 28px 0
-        }
-
-        .section h2 {
-            font-size: 1.4rem;
-            margin: 0 0 8px
-        }
-
-        .muted {
-            color: var(--muted)
-        }
-
-        .toc {
-            position: sticky;
-            top: 112px;
-            align-self: start;
-            max-height: calc(100vh - 120px);
-            overflow: auto;
-            padding: 16px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: color-mix(in oklab, var(--panel), transparent 10%)
-        }
-
-        .toc a {
-            display: block;
-            padding: 6px 8px;
-            border-radius: 8px;
-            color: var(--muted)
-        }
-
-        .toc a:hover {
-            background: color-mix(in oklab, var(--panel), transparent 30%);
-            color: var(--text)
+            box-shadow: var(--ring);
         }
 
         .kbd {
@@ -325,7 +232,7 @@
             border-radius: 6px;
             background: #0e1621;
             color: #d1e5ff;
-            font: 12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace
+            font: 12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
         }
 
         .input,
@@ -335,19 +242,19 @@
             border-radius: 10px;
             border: 1px solid var(--border);
             background: color-mix(in oklab, var(--panel), transparent 10%);
-            color: var(--text)
+            color: var(--text);
         }
 
         .row {
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 12px;
-            align-items: center
+            align-items: center;
         }
 
         @media (max-width: 720px) {
             .row {
-                grid-template-columns: 1fr
+                grid-template-columns: 1fr;
             }
         }
 
@@ -359,30 +266,51 @@
             background: linear-gradient(135deg, var(--brand), var(--brand-2));
             color: #0b0f14;
             font-weight: 700;
-            cursor: pointer
+            cursor: pointer;
         }
 
         .btn.secondary {
             background: color-mix(in oklab, var(--panel), transparent 10%);
             color: var(--text);
-            border: 1px solid var(--border)
+            border: 1px solid var(--border);
         }
 
         details {
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 12px 14px;
-            background: color-mix(in oklab, var(--panel), transparent 10%)
+            background: color-mix(in oklab, var(--panel), transparent 10%);
         }
 
         summary {
             cursor: pointer;
-            font-weight: 700
+            font-weight: 700;
         }
 
         footer {
             padding: 40px 24px;
-            color: var(--muted)
+            color: var(--muted);
+        }
+
+        #playground section {
+            margin-top: 14px;
+        }
+
+        #playground ul {
+            margin: 8px 0 0 60px;
+            padding: 0;
+        }
+
+        #playground code {
+            background: rgba(0, 0, 0, 0.12);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            color: var(--text);
+        }
+
+        #playground h4 {
+            margin-left: 20px;
         }
     </style>
 </head>
@@ -391,9 +319,10 @@
     <header class="nav">
         <div class="nav-inner container">
             <div class="brand">
-                <div class="logo" aria-hidden="true"></div>
+                <img src="./images/isotipo.png" alt="VeChain logo" class="logo" />
                 <div>VeChain MCP Server</div>
             </div>
+
             <nav class="tabs" role="tablist" aria-label="Primary">
                 <button class="tab active" data-tab="docs" role="tab" aria-selected="true">Docs</button>
             </nav>
@@ -402,197 +331,103 @@
 
     <main class="container">
         <section class="hero">
-            <p class="pill" style="display:inline-flex; align-items:center; gap:8px">MCP • Model Context Protocol <span
-                    class="muted">for VeChain</span></p>
-            <h1>Fast tools for VeChain data & docs</h1>
+            <p class="pill">MCP • Model Context Protocol <span class="muted">for VeChain</span></p>
+            <h1>VeChain MCP Server</h1>
             <p class="tagline">This page documents and helps you configure an MCP server exposing VeChain Docs search
                 plus Thorest API tools for accounts, transactions, blocks and fee suggestions.</p>
+
+            <a href="https://github.com/leandrogavidia/vechain-mcp-server" target="_blank"
+                rel="noopener noreferrer">GitHub Repository</a>
         </section>
 
-        <div class="grid" style="grid-template-columns: 260px 1fr; gap:24px">
-            <aside class="toc">
-                <strong>On this page</strong>
-                <a href="#integration">Integration</a>
-                <a href="#playground">Tool playground</a>
-                <a href="#faq">FAQ</a>
-            </aside>
-
-            <div>
-                <div id="tab-docs" role="tabpanel">
-                    <div id="integration" class="section">
-                        <h2>Integrations</h2>
-                        <p class="muted">Register the server in your MCP‑aware host configuration (paths vary by host).
-                        </p>
-                        <div class="code" data-copy>
-                            <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                            </div>
-                            <pre><code class="language-json">{
+        <div id="tab-docs" role="tabpanel">
+            <div id="integration" class="section">
+                <h2>Integrations</h2>
+                <p class="muted">Register the server in your MCP-aware host configuration (paths vary by host).</p>
+                <div class="code" data-copy>
+                    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                    <pre><code class="language-json">{
   "mcpServers": {
-    "vechain": {
-      "command": "node",
-      "args": ["server.js"],
-      "env": { }
+    "vechainMcp": {
+      "url": "https://server.smithery.ai/@leandrogavidia/vechain-mcp-server/mcp",
+      "type": "streamable-http"
     }
   }
 }</code></pre>
-                            <button class="copy" title="Copy">Copy</button>
-                        </div>
-                    </div>
-
-                    <div class="section" id="playground">
-                        <h2>Tool playground</h2>
-                        <p class="muted">Build a request and copy the generated command or JSON arguments into your MCP
-                            host. This playground does not call the network; it simply formats requests for you.</p>
-
-                        <details open>
-                            <summary>🔎 <strong>searchDocumentation</strong></summary>
-                            <div style="margin:12px 0; display:grid; gap:12px">
-                                <div class="row"><label for="q">Query</label><input id="q" class="input"
-                                        placeholder="e.g. VIP-191 gas mechanics" /></div>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap">
-                                    <button class="btn" onclick="build('searchDocumentation')">Build arguments</button>
-                                    <button class="btn secondary" onclick="resetForm(this)">Reset</button>
-                                </div>
-                                <div class="code">
-                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                            class="dot"></span></div>
-                                    <pre><code id="out-searchDocumentation" class="language-json">{
-  "name": "searchDocumentation",
-  "arguments": { "query": "" }
-}</code></pre>
-                                </div>
-                            </div>
-                        </details>
-
-                        <details>
-                            <summary>👤 <strong>getAccount</strong></summary>
-                            <div style="margin:12px 0; display:grid; gap:12px">
-                                <div class="row"><label for="addr">Address</label><input id="addr" class="input"
-                                        placeholder="0x0000000000000000000000000000456E65726779" /></div>
-                                <div class="row"><label for="rev">Revision</label>
-                                    <select id="rev" class="input">
-                                        <option value="">(omit → best)</option>
-                                        <option>best</option>
-                                        <option>justified</option>
-                                        <option>finalized</option>
-                                        <option value=":number">(custom number)</option>
-                                        <option value=":string">(custom string)</option>
-                                    </select>
-                                </div>
-                                <div class="row" id="revCustomRow" style="display:none"><label>Custom
-                                        value</label><input id="revCustom" class="input"
-                                        placeholder="e.g. 123456 or 0xabc..." /></div>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap">
-                                    <button class="btn" onclick="build('getAccount')">Build arguments</button>
-                                    <button class="btn secondary" onclick="resetForm(this)">Reset</button>
-                                </div>
-                                <div class="code">
-                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                            class="dot"></span></div>
-                                    <pre><code id="out-getAccount" class="language-json">{
-  "name": "getAccount",
-  "arguments": { "address": "" }
-}</code></pre>
-                                </div>
-                            </div>
-                        </details>
-
-                        <details>
-                            <summary>🔗 <strong>getTransaction</strong></summary>
-                            <div style="margin:12px 0; display:grid; gap:12px">
-                                <div class="row"><label for="txid">Transaction ID</label><input id="txid" class="input"
-                                        placeholder="0x…64 hex" /></div>
-                                <div class="row"><label>Include pending?</label><select id="pending" class="input">
-                                        <option>false</option>
-                                        <option>true</option>
-                                    </select></div>
-                                <div class="row"><label>Include raw?</label><select id="raw" class="input">
-                                        <option>false</option>
-                                        <option>true</option>
-                                    </select></div>
-                                <div class="row"><label>Head block ID</label><input id="head" class="input"
-                                        placeholder="(optional) 0x..." /></div>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap">
-                                    <button class="btn" onclick="build('getTransaction')">Build arguments</button>
-                                    <button class="btn secondary" onclick="resetForm(this)">Reset</button>
-                                </div>
-                                <div class="code">
-                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                            class="dot"></span></div>
-                                    <pre><code id="out-getTransaction" class="language-json">{
-  "name": "getTransaction",
-  "arguments": { "id": "" }
-}</code></pre>
-                                </div>
-                            </div>
-                        </details>
-
-                        <details>
-                            <summary>📦 <strong>getBlock</strong></summary>
-                            <div style="margin:12px 0; display:grid; gap:12px">
-                                <div class="row"><label>Revision</label><input id="blockrev" class="input"
-                                        placeholder="best | justified | finalized | block number | block ID" /></div>
-                                <div class="row"><label>Expanded?</label><select id="expanded" class="input">
-                                        <option>false</option>
-                                        <option>true</option>
-                                    </select></div>
-                                <div class="row"><label>Raw (RLP)?</label><select id="rawblock" class="input">
-                                        <option>false</option>
-                                        <option>true</option>
-                                    </select></div>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap">
-                                    <button class="btn" onclick="build('getBlock')">Build arguments</button>
-                                    <button class="btn secondary" onclick="resetForm(this)">Reset</button>
-                                </div>
-                                <div class="code">
-                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                            class="dot"></span></div>
-                                    <pre><code id="out-getBlock" class="language-json">{
-  "name": "getBlock",
-  "arguments": { "revision": "best" }
-}</code></pre>
-                                </div>
-                            </div>
-                        </details>
-
-                        <details>
-                            <summary>⛽ <strong>getPriorityFee</strong></summary>
-                            <div style="margin:12px 0; display:grid; gap:12px">
-                                <div style="display:flex; gap:10px; flex-wrap:wrap">
-                                    <button class="btn" onclick="build('getPriorityFee')">Build arguments</button>
-                                </div>
-                                <div class="code">
-                                    <div class="bar"><span class="dot"></span><span class="dot"></span><span
-                                            class="dot"></span></div>
-                                    <pre><code id="out-getPriorityFee" class="language-json">{
-  "name": "getPriorityFee",
-  "arguments": { }
-}</code></pre>
-                                </div>
-                            </div>
-                        </details>
-                    </div>
-
-
-                    <div class="section" id="faq">
-                        <h2>FAQ</h2>
-                        <details>
-                            <summary>How do I query a specific block state?</summary>
-                            Use the <code>revision</code> parameter across tools that support it. For example, pass a
-                            block number to <code>getAccount</code> or <code>getBlock</code> to pin reads to that state.
-                        </details>
-                        <details>
-                            <summary>Why am I seeing timeouts?</summary>
-                            Increase <code>vechainConfig.mainnet.controllerAbortTimeout</code> and verify your
-                            <code>thorestApiBaseUrl</code> is reachable from the host environment.
-                        </details>
-                        <details>
-                            <summary>Can I return raw encodings?</summary>
-                            Yes—set <code>raw: true</code> on <code>getTransaction</code> or <code>getBlock</code> to
-                            request raw hex / RLP where supported.
-                        </details>
-                    </div>
+                    <button class="copy" title="Copy">Copy</button>
                 </div>
+            </div>
+
+            <div class="section" id="playground">
+                <h2>Tool list</h2>
+                <p class="muted">
+                    A read-only list of the available tools. Use these names when constructing MCP requests.
+                </p>
+
+                <section>
+                    <h3>Vechain Docs</h3>
+                    <ul>
+                        <li><code>search_documentation</code> — Search VeChain Documentation.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Thorest API</h3>
+
+                    <h4>Accounts</h4>
+                    <ul>
+                        <li><code>get_account</code> — Retrieve account details.</li>
+                    </ul>
+
+                    <h4>Transactions</h4>
+                    <ul>
+                        <li><code>get_transaction</code> — Retrieve a transaction by ID.</li>
+                    </ul>
+
+                    <h4>Blocks</h4>
+                    <ul>
+                        <li><code>get_block</code> — Get a VeChain block.</li>
+                    </ul>
+
+                    <h4>Fees</h4>
+                    <ul>
+                        <li><code>get_priority_fee</code> — Suggest a priority fee.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Wallet & signatures</h3>
+
+                    <h4>Wallet</h4>
+                    <ul>
+                        <li><code>create_wallet</code> — Create a VeChain wallet (mnemonic + keys).</li>
+                    </ul>
+
+                    <h4>Signatures</h4>
+                    <ul>
+                        <li><code>sign_certificate</code> — Create and sign a canonical certificate.</li>
+                        <li><code>sign_raw_transaction</code> — Sign raw transaction.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Goat SDK (VeChain Tools)</h3>
+                    <ul>
+                        <li><code>get_address</code> — Get the address of the wallet</li>
+                        <li><code>get_chain</code> — Get the chain of the wallet</li>
+                        <li><code>sign_message</code> — Sign a message with the wallet</li>
+                        <li><code>get_balance</code> — Get the balance for native currency or a specific token</li>
+                        <li><code>get_token_info_by_ticker</code> — Get token info (contract, decimals) by ticker</li>
+                        <li><code>convert_to_base_units</code> — Convert a token amount to base units (e.g., wei)</li>
+                        <li><code>convert_from_base_units</code> — Convert from base units to readable units</li>
+                        <li><code>sign_typed_data_evm</code> — Sign EIP-712 typed data (EVM)</li>
+                        <li><code>get_token_allowance_evm</code> — Get ERC20 allowance (base units)</li>
+                        <li><code>send_token</code> — Send native currency or ERC20 token (base units)</li>
+                        <li><code>approve_token_evm</code> — Approve ERC20 token allowance (base units)</li>
+                        <li><code>revoke_token_approval_evm</code> — Revoke ERC20 token approval (set allowance to 0)
+                        </li>
+                    </ul>
+                </section>
             </div>
         </div>
     </main>
@@ -600,50 +435,17 @@
     <script>
         document.querySelectorAll('[data-copy] .copy').forEach(btn => {
             btn.addEventListener('click', async () => {
-                const pre = btn.parentElement.querySelector('pre');
-                const text = pre.innerText; try { await navigator.clipboard.writeText(text); btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 1600); } catch { }
+                try {
+                    const pre = btn.parentElement.querySelector('pre');
+                    if (!pre) return;
+                    const text = pre.innerText || pre.textContent || '';
+                    await navigator.clipboard.writeText(text);
+                    const prev = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => btn.textContent = prev || 'Copy', 1600);
+                } catch {
+                }
             });
-        });
-
-        const el = id => document.getElementById(id);
-        const out = id => document.getElementById('out-' + id);
-
-        function build(name) {
-            let args = {};
-            switch (name) {
-                case 'searchDocumentation':
-                    args = { query: el('q').value.trim() };
-                    break;
-                case 'getAccount':
-                    const addr = el('addr').value.trim();
-                    const revSel = el('rev').value;
-                    if (revSel === ':number') args.revision = Number(el('revCustom').value);
-                    else if (revSel === ':string') args.revision = el('revCustom').value.trim();
-                    else if (revSel) args.revision = revSel;
-                    args.address = addr;
-                    break;
-                case 'getTransaction':
-                    args = {
-                        id: el('txid').value.trim(),
-                        pending: el('pending').value === 'true',
-                        raw: el('raw').value === 'true'
-                    };
-                    if (el('head').value.trim()) args.head = el('head').value.trim();
-                    break;
-                case 'getBlock':
-                    args = { revision: el('blockrev').value.trim() || 'best', expanded: el('expanded').value === 'true', raw: el('rawblock').value === 'true' };
-                    break;
-                case 'getPriorityFee':
-                    args = {}; break;
-            }
-            out(name).textContent = JSON.stringify({ name, arguments: args }, null, 2);
-        }
-
-        const rev = el('rev'); const row = el('revCustomRow'); const input = el('revCustom');
-        rev.addEventListener('change', () => { row.style.display = (rev.value.startsWith(':')) ? '' : 'none'; if (rev.value.startsWith(':')) input.focus(); });
-
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => { const id = a.getAttribute('href').slice(1); const target = document.getElementById(id); if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); } });
         });
     </script>
 </body>
